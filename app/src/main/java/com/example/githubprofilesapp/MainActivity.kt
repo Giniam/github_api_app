@@ -3,44 +3,40 @@ package com.example.githubprofilesapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.githubprofilesapp.ui.theme.GithubProfilesAppTheme
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.githubprofilesapp.data.remote.RetrofitClient
+import com.example.githubprofilesapp.data.repository.GithubRepo
+import com.example.githubprofilesapp.ui.screen.UserDetailScreen
+import com.example.githubprofilesapp.ui.screen.UserListScreen
+import com.example.githubprofilesapp.ui.viewmodel.GitHubViewModelFactory
+import com.example.githubprofilesapp.ui.viewmodel.GithubViewModel
 
 class MainActivity : ComponentActivity() {
+    private lateinit var viewModel: GithubViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val apiService = RetrofitClient.apiService
+        val repository = GithubRepo(apiService)
+        val viewModelFactory = GitHubViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(GithubViewModel::class.java)
+
         setContent {
-            GithubProfilesAppTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
+            val navController = rememberNavController()
+            NavHost(navController = navController, startDestination = "user_list") {
+                composable("user_list") {
+                    UserListScreen(viewModel) { username ->
+                        navController.navigate("user_detail/$username")
+                    }
+                }
+                composable("user_detail/{username}") { backStackEntry ->
+                    val username = backStackEntry.arguments?.getString("username") ?: return@composable
+                    UserDetailScreen(viewModel, username)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GithubProfilesAppTheme {
-        Greeting("Android")
     }
 }

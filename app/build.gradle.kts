@@ -70,6 +70,7 @@ dependencies {
     //Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 
     //Test
     testImplementation("junit:junit:4.13.2")
