@@ -5,12 +5,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.githubprofilesapp.data.model.User
@@ -28,10 +31,13 @@ fun UserListScreen(viewModel: GithubViewModel, onUserClick: (String) -> Unit) {
             value = searchQuery,
             onValueChange = { searchQuery = it },
             label = { Text("Search Username") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier
+            .height(8.dp)
+        )
 
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -50,16 +56,32 @@ fun UserListScreen(viewModel: GithubViewModel, onUserClick: (String) -> Unit) {
 
 @Composable
 fun UserItem(user: User, onClick: () -> Unit) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable(onClick = onClick)
-        .padding(8.dp)) {
-        Image(
-            painter = rememberImagePainter(user.avatarUrl),
-            contentDescription = null,
-            modifier = Modifier.size(50.dp)
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(text = user.login)
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFF1E1E1E)
+        ),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+            Image(
+                painter = rememberImagePainter(user.avatarUrl),
+                contentDescription = null,
+                modifier = Modifier.size(50.dp)
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = user.login,
+                color = Color.White,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
     }
 }
