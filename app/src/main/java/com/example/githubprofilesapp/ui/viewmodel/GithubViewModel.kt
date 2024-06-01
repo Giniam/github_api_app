@@ -2,7 +2,7 @@ package com.example.githubprofilesapp.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.githubprofilesapp.data.model.Repo
+import com.example.githubprofilesapp.data.model.UserRepoModel
 import com.example.githubprofilesapp.data.model.User
 import com.example.githubprofilesapp.data.repository.GithubRepo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +17,8 @@ class GithubViewModel(private val repository: GithubRepo): ViewModel() {
     private val _selectedUser = MutableStateFlow<User?>(null)
     val selectedUser: StateFlow<User?> get() = _selectedUser
 
-    private val _userRepos = MutableStateFlow<List<Repo>>(emptyList())
-    val userRepos: StateFlow<List<Repo>> get() = _userRepos
+    private val _userRepos = MutableStateFlow<List<UserRepoModel>>(emptyList())
+    val userRepos: StateFlow<List<UserRepoModel>> get() = _userRepos
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
